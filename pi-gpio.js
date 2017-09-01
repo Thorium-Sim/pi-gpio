@@ -1,7 +1,8 @@
 "use strict";
 var fs = require("fs"),
   path = require("path"),
-  exec = require("child_process").exec;
+  exec = require("child_process").exec,
+  execSync = require("child_process").execSync;
 
 var gpioAdmin = "gpio-admin",
   sysFsPathOld = "/sys/devices/virtual/gpio", // pre 3.18.x kernel
@@ -152,6 +153,14 @@ var gpio = {
     );
   },
 
+  openSync: function(pinNumber, options) {
+    pinNumber = sanitizePinNumber(pinNumber);
+    options = sanitizeOptions(options);
+    execSync(
+      gpioAdmin + " export " + pinMapping[pinNumber] + " " + options.pull
+    );
+    gpio.setDirectionSync(pinNumber, options.direction);
+  },
   setDirection: function(pinNumber, direction, callback) {
     pinNumber = sanitizePinNumber(pinNumber);
     direction = sanitizeDirection(direction);
@@ -162,7 +171,15 @@ var gpio = {
       callback || noop
     );
   },
+  setDirectionSync: function(pinNumber, direction) {
+    pinNumber = sanitizePinNumber(pinNumber);
+    direction = sanitizeDirection(direction);
 
+    fs.writeFileSync(
+      sysFsPath + "/gpio" + pinMapping[pinNumber] + "/direction",
+      direction
+    );
+  },
   getDirection: function(pinNumber, callback) {
     pinNumber = sanitizePinNumber(pinNumber);
     callback = callback || noop;
@@ -176,6 +193,16 @@ var gpio = {
       }
     );
   },
+  getDirectionSync: function(pinNumber) {
+    pinNumber = sanitizePinNumber(pinNumber);
+    callback = callback || noop;
+
+    var direction = fs.readFileSync(
+      sysFsPath + "/gpio" + pinMapping[pinNumber] + "/direction",
+      "utf8"
+    );
+    return sanitizeDirection(direction.trim());
+  },
 
   close: function(pinNumber, callback) {
     pinNumber = sanitizePinNumber(pinNumber);
@@ -185,7 +212,11 @@ var gpio = {
       handleExecResponse("close", pinNumber, callback || noop)
     );
   },
+  closeSync: function(pinNumber) {
+    pinNumber = sanitizePinNumber(pinNumber);
 
+    execSync(gpioAdmin + " unexport " + pinMapping[pinNumber]);
+  },
   read: function(pinNumber, callback) {
     pinNumber = sanitizePinNumber(pinNumber);
 
@@ -218,17 +249,17 @@ var gpio = {
     return fs.readFileSync(
       sysFsPath + "/gpio" + pinMapping[pinNumber] + "/value"
     );
-	},
-	writeSync: function(pinNumber, value) {
+  },
+  writeSync: function(pinNumber, value) {
     pinNumber = sanitizePinNumber(pinNumber);
 
     value = !!value ? "1" : "0";
 
-    return fs.writeFile(
+    return fs.writeFileSync(
       sysFsPath + "/gpio" + pinMapping[pinNumber] + "/value",
       value,
-			"utf8"
-		);
+      "utf8"
+    );
   }
 };
 
