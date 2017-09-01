@@ -1,16 +1,16 @@
 {
-  "author": "Rakesh Pai <rakeshpai@gmail.com>",
-  "name": "pi-gpio",
-  "description": "A simple node.js-based GPIO helper for the Raspberry Pi",
+  "author": "Alex Anderson <alexanderson1993@gmail.com>",
+  "name": "pi-gpio-sync",
+  "description": "A simple node.js-based GPIO helper for the Raspberry Pi, with synchronous methods included. Based off of pi-gpio by Rakesh Pai <rakeshpai@gmail.com>",
   "version": "0.0.8",
   "repository": {
     "type": "git",
-    "url": "git@github.com:rakeshpai/pi-gpio.git"
+    "url": "git@github.com:thorium-sim/pi-gpio.git"
   },
-  "homepage": "https://github.com/rakeshpai/pi-gpio",
+  "homepage": "https://github.com/thorium-sim/pi-gpio",
   "main": "./pi-gpio",
   "bugs": {
-    "url": "https://github.com/rakeshpai/pi-gpio/issues"
+    "url": "https://github.com/thorium-sim/pi-gpio/issues"
   },
   "tags": [
     "raspberry",
