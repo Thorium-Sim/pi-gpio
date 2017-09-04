@@ -156,9 +156,13 @@ var gpio = {
   openSync: function(pinNumber, options) {
     pinNumber = sanitizePinNumber(pinNumber);
     options = sanitizeOptions(options);
-    execSync(
-      gpioAdmin + " export " + pinMapping[pinNumber] + " " + options.pull
-    );
+    try {
+      execSync(
+        gpioAdmin + " export " + pinMapping[pinNumber] + " " + options.pull
+      );
+    } catch(error) {
+      console.error('There was an error opening : ', error)
+    }
     gpio.setDirectionSync(pinNumber, options.direction);
   },
   setDirection: function(pinNumber, direction, callback) {
