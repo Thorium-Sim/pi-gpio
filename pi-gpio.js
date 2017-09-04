@@ -161,7 +161,7 @@ var gpio = {
         gpioAdmin + " export " + pinMapping[pinNumber] + " " + options.pull
       );
     } catch(error) {
-      console.error('There was an error opening : ', error)
+      console.error('There was an error opening pin.')
     }
     gpio.setDirectionSync(pinNumber, options.direction);
   },
